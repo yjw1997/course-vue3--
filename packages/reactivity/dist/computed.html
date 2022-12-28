@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script src="./reactivity.global.js"></script>
+  <div id="app"></div>
+  <script>
+    // effect 代表的是副作用函数, 如果此函数的依赖的数据发生变化 会重新执行
+    // reactive 将数据变成响应式数据 proxy
+    const {
+      effect,
+      reactive,
+      computed
+    } = VueReactivity
+    const state = reactive({
+      firname: '牛',
+      lastname: '逼'
+    })
+    const fullName = computed({
+      get() {
+        console.log('runner')
+        return state.firname + state.lastname
+      },
+      set(newV) {
+        console.log(newV)
+      }
+    })
+    effect(() => {
+      app.innerHTML = fullName.value
+    })
+    setTimeout(() => {
+      state.lastname = '皮'
+    }, 1000)
+    //  计算属性中肯定要有一个缓存的标识,如果依赖变化 要重新执行get,没有变化不执行
+    // dirty 是否是脏的
+    //  计算属性是一个effect,依赖的属性变化了 会更新dirty的值
+
+    /**
+     * 1. firstname要依赖计算属性的effect
+     * 2. 计算属性收集外层的effect
+     * 3. 以来的值变化时会触发计算属性effect重新执行,计算属性重新执行会触发外层的effect来执行
+     */
+  </script>
+
+</body>
+
+</html>

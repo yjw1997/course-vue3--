@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script src="./reactivity.global.js"></script>
+  <div id="app"></div>
+  <script>
+    const {
+      effect,
+      reactive,
+    } = VueReactivity
+    console.log('[ reactive ] >', reactive)
+    const state = reactive({
+      flag: true,
+      name: 'jw',
+      age: 30
+    })
+    let runner = effect(() => {
+      console.log('render')
+      //  我们期待每次执行effect的时候都可以清理一遍依赖
+      // app.innerHTML = state.flag ? state.name : state.age
+      app.innerHTML = state.age
+    })
+    // setTimeout(() => {
+    //   state.flag = false
+    //   setTimeout(() => {
+    //     console.log('修改name,原则上不更新')
+    //     state.name = 'zf'
+    //   })
+    // }, 1000);
+
+    // scopeEffect()
+    runner.effect.stop()
+    setTimeout(() => {
+      state.age = 1000
+      setTimeout(() => {
+        runner()
+      }, 2000)
+    }, 1000)
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script src="./reactivity.global.js"></script>
+  <div id="app"></div>
+  <script>
+    // const {
+    //   ref,
+    //   effect
+    // } = VueReactivity
+    // const flag = ref(false)
+    // console.log('[ flag ] >', flag)
+    // effect(() => {
+    //   app.innerHTML = flag.value ? '你好' : '不好'
+    // })
+    // setTimeout(() => {
+    //   flag.value = true
+    // }, 2000)
+
+    const {
+      toRefs,
+      effect,
+      reactive
+    } = VueReactivity
+    const school = reactive({
+      name: 'yjw',
+      age: 24
+    })
+    console.log('[ toRefs(school) ] >', toRefs(school))
+
+    let {
+      name,
+      age
+    } = toRefs(school)
+    effect(() => {
+      app.innerHTML = `${name.value}今年${age.value}岁了`
+    })
+    setTimeout(() => {
+      age.value = 1000
+    }, 2000)
+  </script>
+
+</body>
+
+</html>

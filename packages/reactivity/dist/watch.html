@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <script src="./reactivity.global.js"></script>
+  <div id="app"></div>
+  <script>
+    let waiting = false
+    const {
+      reactive,
+      watch
+    } = VueReactivity
+    const state = reactive({
+      name: 'yjw',
+      age: 30
+    })
+    // 1.监控数据变化,数据变化了就重新执行
+    // 2.这里可以去监控一个函数,函数的返回值就是老值,更新后获取新值
+    //  watch的本质就是effect访问的时候进行依赖收集  
+    // watch(() => state.name, function (newV, oldV) {
+    //   console.log(newV, oldV)
+    //   app.innerHTML = state.name
+    // })
+    // setTimeout(() => {
+    //   state.name = 'cm'
+    // }, 1000)
+
+    //  解决并发问题
+
+    let i = 2000
+
+    function getData(timer) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(timer)
+        }, timer)
+      })
+    }
+    watch(() => state.age, async (newValue, olaValue, onCleanup) => {
+      let clear = false
+      onCleanup(() => {
+        clear = true
+      })
+      i -= 1000
+      let res = await getData(i)
+      if (!clear) {
+        app.innerHTML = res
+      }
+    })
+    state.age = 18
+    state.age = 19
+  </script>
+
+</body>
+
+</html>
